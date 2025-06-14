@@ -1,0 +1,4 @@
+BootCamp TONNIE 
+Java and AI in Europe
+Desenvolvedores inscritos: Julia Marina, Maria Gomes
+Conteudos: Principios da programação Java, Banco de dados SQL, Banco de dados MongoDB, Aplicações com Spring Boot, Design Patterns em Java, Computação em Nuvem, Processos com Devops, Programação, Devops, IA, Banco de dados
