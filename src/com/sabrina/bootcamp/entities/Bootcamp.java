@@ -2,7 +2,9 @@ package com.sabrina.bootcamp.entities;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.time.Month.MAY;
 
@@ -71,24 +73,74 @@ public class Bootcamp {
             System.out.println(e.getMessage());
         }
     }
-
-    public void listarTodosDesenvolvedoresInscritosNoBootcamp() {
+    public String desenvolvedoresDoCurso(){
+        return desenvolvedores.stream().map(Desenvolvedores::getNome).collect(Collectors.joining(", "));
+    }
+    public void DesenvolvedoresBootcampCursosEmAndamento() {
         checkIfItIsNull();
         desenvolvedores.stream().collect(Collectors.groupingBy(Desenvolvedores::getNome, Collectors.summingInt(c -> c.getConteudosIncritos().size()))).forEach((s1, s2) -> System.out.println(s1 + " qtd_cursos_em_andamento: " + s2));
     }
-    public List<String> listarTodosConteudos() {
-        checkIfItIsNull();
-        List<String> conteudosTitulo = new ArrayList<>();
-        for (Conteudos c: conteudos){
-            if (c instanceof Cursos){
-                conteudosTitulo.add(((Cursos)c).getTitulo());
-            } else if (c instanceof Mentorias) {
-                conteudosTitulo.add((((Mentorias) c).getTitulo()));
-            }
-        }
-        return conteudosTitulo;
-    }
 
+    public String listarTodosConteudos() {
+        checkIfItIsNull();
+        return conteudos.stream().map(Conteudos::getTitulo).collect(Collectors.joining(" "));
+    }
+    public String listandoMentores(){
+        String stringMentores = conteudos
+                .stream()
+                .filter(c -> c instanceof Mentorias)
+                .map(c -> ((Mentorias) c)
+                        .getMentor())
+                            .collect(Collectors.joining(", "));
+        String stringMentorias =  conteudos
+                .stream()
+                .map(Conteudos::getTitulo)
+                .collect(Collectors.joining(" - " ));
+        return "Mentores ->> " +stringMentores + " - Mentorias ->> " + stringMentorias;
+    }
+    public int calcularCargaHoraria(){
+        checkIfItIsNull();
+        return conteudos.stream().mapToInt(c -> {
+            int cargaDeHoras = 0;
+            if (c instanceof Cursos){
+               cargaDeHoras = ((Cursos) c).getCargaHoraria();
+            } else if (c instanceof Mentorias) {
+                cargaDeHoras = ((Mentorias) c).getDatas().getDayOfMonth();
+            }
+            return cargaDeHoras;
+        }).sum();
+    }
+    public Optional<IntSummaryStatistics> situacaoAtualDesenvolvedores(String conteudo){
+        checkIfItIsNull();
+        if (conteudo.trim().equalsIgnoreCase("Conteudos finalizados")){
+            return Optional.of(desenvolvedores.stream().collect(Collectors.summarizingInt(d -> d.getConteudosFinalizados().size())));
+        }else if (conteudo.trim().equalsIgnoreCase("Conteudos inscritos")){
+            return Optional.of(desenvolvedores.stream().collect(Collectors.summarizingInt(d -> d.getConteudosIncritos().size())));
+        }else {
+            return Optional.empty();
+        }
+    }
+    public Optional<Desenvolvedores> verificandoSeFinalizado(){
+        return desenvolvedores.stream().filter(s ->s.bootCampFinalizado().isPresent()).findFirst();
+    }
+    public String infoDesenvolvedoresCurso(){
+        checkIfItIsNull();
+        return desenvolvedores.stream().collect(Collectors.teeing(Collectors.maxBy(Comparator
+                        .comparing(d -> d.getConteudosIncritos().size())),
+                Collectors.maxBy(Comparator.comparing(d -> d.getConteudosFinalizados().size())),
+                (d, t) -> {
+                    String ini = d.map(Desenvolvedores::getNome).orElse("n/a");
+                    String fin = t.map(Desenvolvedores::getNome).orElse("n/a");
+                    int qtdInici = d.map(d2 -> d2.getConteudosIncritos().size()).orElse(0);
+                    int qtdFin = t.map(d1 -> d1.getConteudosFinalizados().size()).orElse(0);
+
+                    return "Desenvolvedores inscritos em mais cursos inscritos: " + ini + " = " +qtdInici + ", Desenvolvedores com mais cursos finalizados: " + fin+ " = " + qtdFin;
+                }));
+    }
+    public void qtdCursosFinalizadosPorDesenvolvedor(){
+        checkIfItIsNull();
+        desenvolvedores.stream().collect(Collectors.groupingBy(Desenvolvedores::getNome, Collectors.summingInt(d -> d.getConteudosFinalizados().size()))).forEach((d, s) -> System.out.println(d +" qtd_cursos_finalizados ->> " + s));
+    }
     @Override
     public String toString() {
         return "Bootcamp{" +
@@ -100,5 +152,4 @@ public class Bootcamp {
                 ", conteudos=" + conteudos +
                 '}';
     }
-
 }

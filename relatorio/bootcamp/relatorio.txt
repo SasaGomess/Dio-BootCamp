@@ -1,4 +1,8 @@
-BootCamp TONNIE 
+BootCamp TONNIE  - 2025-05-20, até: 2025-07-04
 Java and AI in Europe
 Desenvolvedores inscritos: Julia Marina, Maria Gomes
-Conteudos: Principios da programação Java, Banco de dados SQL, Banco de dados MongoDB, Aplicações com Spring Boot, Design Patterns em Java, Computação em Nuvem, Processos com Devops, Programação, Devops, IA, Banco de dados
+Conteudos: Principios da programação Java Banco de dados SQL Banco de dados MongoDB Aplicações com Spring Boot Design Patterns em Java Computação em Nuvem Processos com Devops Programação Devops IA Banco de dados
+Mentores ->> Rodrigo Sampaio, Jaqueline Viera, Joao Lacerda, Juliana Rodriguez - Mentorias ->> Principios da programação Java - Banco de dados SQL - Banco de dados MongoDB - Aplicações com Spring Boot - Design Patterns em Java - Computação em Nuvem - Processos com Devops - Programação - Devops - IA - Banco de dados
+Carga horaria total de todos os cursos e mentorias: 219Hs
+IntSummaryStatistics{count=2, sum=16, min=5, average=8,000000, max=11}
+Desenvolvedores inscritos em mais cursos inscritos: Maria Gomes = 6, Desenvolvedores com mais cursos finalizados: Julia Marina = 11

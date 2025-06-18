@@ -1,6 +1,8 @@
 package com.sabrina.bootcamp.view;
 
 import com.sabrina.bootcamp.entities.*;
+import com.sabrina.bootcamp.entities.utils.FilesGenerete;
+import com.sabrina.bootcamp.services.GerandoCertificado;
 import com.sabrina.bootcamp.services.GerandoRelatorio;
 
 import java.io.IOException;
@@ -10,7 +12,7 @@ import java.time.Month;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        
+
         Bootcamp bootcamp1 = new Bootcamp("BootCamp TONNIE ", "Java and AI in Europe");
         System.out.println(bootcamp1.getNome() + " - " + bootcamp1.getDataInicial());
         Desenvolvedores dev = new Desenvolvedores("Maria Gomes");
@@ -62,7 +64,7 @@ public class Main {
 
         dev1.listarCursosEmAndamento();
         System.out.println();
-        bootcamp1.listarTodosDesenvolvedoresInscritosNoBootcamp();
+        bootcamp1.DesenvolvedoresBootcampCursosEmAndamento();
 
         System.out.println("========================================");
 
@@ -71,22 +73,62 @@ public class Main {
         dev.progredir();
         dev.progredir();
         System.out.println();
-        bootcamp1.listarTodosDesenvolvedoresInscritosNoBootcamp();
+        bootcamp1.DesenvolvedoresBootcampCursosEmAndamento();
+        System.out.println();
+
+        System.out.println("Carga horaria total dos cursos e mentorias: "+bootcamp1.calcularCargaHoraria());
         System.out.println();
 
         dev.listarMentoriasRealizadas();
         System.out.println();
         dev1.listarMentoriasRealizadas();
-
+        bootcamp1.qtdCursosFinalizadosPorDesenvolvedor();
         System.out.println();
 
         System.out.println(dev1.getNome() + ", Pontos XP: "+ dev1.calcularTotalXp());
         System.out.println(dev.getNome()+ ", Pontos XP: "+dev.calcularTotalXp());
+        System.out.println();
+        System.out.println(dev1);
+        System.out.println(dev);
+        bootcamp1.situacaoAtualDesenvolvedores("Conteudos finalizados").ifPresent(System.out::println);
+        bootcamp1.situacaoAtualDesenvolvedores("Conteudos inscritos").ifPresent(System.out::println);
+        System.out.println();
+        dev1.progredir();
+        dev1.progredir();
+        dev1.progredir();
+        dev1.progredir();
+        dev1.progredir();
+        dev1.progredir();
+        dev1.progredir();
+        dev1.progredir();
+        double valorFinalizado = dev1.calcularTotalXp();
 
+        System.out.println();
+
+        bootcamp1.qtdCursosFinalizadosPorDesenvolvedor();
+        bootcamp1.DesenvolvedoresBootcampCursosEmAndamento();
+
+        System.out.println();
+        System.out.println(bootcamp1.infoDesenvolvedoresCurso());
+        dev.bootCampFinalizado().ifPresent(System.out::println);
+        dev1.bootCampFinalizado().ifPresent(System.out::println);
         System.out.println("==============================");
+
         GerandoRelatorio gerandoRelatorio = new GerandoRelatorio("relatorio.txt");
         gerandoRelatorio.createDirectory();
         gerandoRelatorio.createFile();
-        gerandoRelatorio.writeContente(bootcamp1);
+        gerandoRelatorio.writeContent(bootcamp1);
+
+        System.out.println("==============================");
+        GerandoCertificado certificado = new GerandoCertificado("certificado.txt");
+        certificado.createDirectory();
+        certificado.createFile();
+
+        if (bootcamp1.verificandoSeFinalizado().isPresent()){
+            Desenvolvedores devEscrita = bootcamp1.verificandoSeFinalizado().get();
+            System.out.println();
+            System.out.println("Gerando certificado do desenvolvedor(a) "+ devEscrita.getNome() + "...");
+            certificado.writeContent(bootcamp1, devEscrita);
+        }
     }
 }

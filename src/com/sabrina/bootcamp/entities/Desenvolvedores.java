@@ -1,5 +1,7 @@
 package com.sabrina.bootcamp.entities;
 
+import com.sabrina.bootcamp.services.GerandoCertificado;
+
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -32,17 +34,25 @@ public class Desenvolvedores {
     }
 
     public void listarCursosEmAndamento(){
-        System.out.println("cursos do(a) ->> "+this.nome );
-        conteudosIncritos.stream().filter(c -> c instanceof Cursos).map(p -> ((Cursos) p).getTitulo()).forEach(s -> System.out.println("Cursos = "+s));
+        System.out.println("cursos do(a) ->> " + this.nome );
+        conteudosIncritos.stream().filter(c -> c instanceof Cursos).map(Conteudos::getTitulo).forEach(s -> System.out.println("Cursos = "+s));
     }
 
     public void listarMentoriasRealizadas(){
         System.out.println("mentorias do(a) ->> "+this.nome );
-        conteudosIncritos.stream().filter(c -> c instanceof Mentorias ).forEach(s -> System.out.println("Mentoria = "+((Mentorias) s).getMentor() + " ->> " + ((Mentorias) s).getTitulo()));
+        conteudosIncritos.stream().filter(c -> c instanceof Mentorias ).forEach(s -> System.out.println("Mentoria = "+ ((Mentorias) s).getMentor() + " ->> " + s.getTitulo()));
     }
 
     public double calcularTotalXp(){
         return conteudosFinalizados.stream().mapToDouble(Conteudos::calcularXp).sum();
+    }
+
+    public Optional<String> bootCampFinalizado(){
+        if (conteudosIncritos.isEmpty()){
+            return Optional.of("Parabens " + this.nome + ", voce finalizou o BootCamp! Com a quantidade de XP ->> " + calcularTotalXp());
+        }else {
+            return Optional.empty();
+        }
     }
 
     public String getNome() {
@@ -72,7 +82,8 @@ public class Desenvolvedores {
     @Override
     public String toString() {
         return "Desenvolvedores{" +
-                "nome='" + nome + '\'' +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
                 ", conteudosIncritos=" + conteudosIncritos +
                 ", conteudosFinalizados=" + conteudosFinalizados +
                 '}';
